@@ -90,6 +90,36 @@ public class LeggiFile {
                         case "Mancato!":
                             tipo = TipoCarte.MANCATO;
                             break;
+                        case "Birra":
+                            tipo = TipoCarte.BIRRA;
+                            break;
+                        case "Saloon":
+                            tipo = TipoCarte.SALOON;
+                            break;
+                        case "Diligenza":
+                            tipo = TipoCarte.DILIGENZA;
+                            break;
+                        case "Wells Fargo":
+                            tipo = TipoCarte.WELLS_FARGO;
+                            break;
+                        case "Panico!":
+                            tipo = TipoCarte.PANICO;
+                            break;
+                        case "Cat Balou":
+                            tipo = TipoCarte.CAT_BALOU;
+                            break;
+                        case "Gatling":
+                            tipo = TipoCarte.GATLING;
+                            break;
+                        case "Barile":
+                            tipo = TipoCarte.BARILE;
+                            break;
+                        case "Mirino":
+                            tipo = TipoCarte.MIRINO;
+                            break;
+                        case "Mustang":
+                            tipo = TipoCarte.MUSTANG;
+                            break;
                         default:
                             tipo = TipoCarte.ALTRO;
                             break;

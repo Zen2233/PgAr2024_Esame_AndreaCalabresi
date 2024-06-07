@@ -8,6 +8,7 @@ public class Carte {
     private String valore;
     private String seme;
     private int distanza = 0;
+    private boolean equipaggiato = false;
 
     public Carte(String nome, String descrizione, boolean equipaggiabile, String valore, String seme, TipoCarte tipo, int distanza) {
         this.nome = nome;
@@ -45,5 +46,15 @@ public class Carte {
 
     public int getDistanza() {
         return distanza;
+    }
+
+    public boolean isEquipaggiato() {
+        return equipaggiato;
+    }
+
+    public void updateEquipaggiato() {
+        if (equipaggiabile) {
+            this.equipaggiato = !(this.equipaggiato);
+        }
     }
 }

@@ -25,6 +25,10 @@ public class Visualizza {
                 text += " [Distanza: " + tmp.getDistanza() + "]";
             }
 
+            if (tmp.isEquipaggiato()) {
+                text += " [Equipaggiato]";
+            }
+
             int len = text.length();
             if (lengthMax < len) {
                 lengthMax = len;

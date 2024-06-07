@@ -126,17 +126,11 @@ public class Partita {
             }
         }
 
-        do {
-            Collections.shuffle(mazzo);
+        Collections.shuffle(mazzo);
 
-            for (Carte tmp : mazzo) {
-                if (this.mazzo.size() < Costanti.NUMERO_CARTE_NO_EQUIP) {
-                    this.mazzo.push(tmp);
-                } else {
-                    break;
-                }
-            }
-        } while (this.mazzo.size() < Costanti.NUMERO_CARTE_NO_EQUIP);
+        for (Carte tmp : mazzo) {
+            this.mazzo.push(tmp);
+        }
 
         for (Carte tmp : armi) {
             this.mazzo.push(tmp);

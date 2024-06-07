@@ -55,7 +55,7 @@ public class Player {
                             carteMano.remove(cartaEquipaggiata);
 
                             Visualizza.tavolo(partita.getListaPlayer(), this);
-                            FunzioniCarte.usaCarta(carta, cartaEquipaggiata, partita);
+                            FunzioniCarte.usaCarta(carta, this, partita);
                             cartaEquipaggiata = new Carte("Colt-45", "", true, "", "", TipoCarte.ARMA, 1);
                         }
                     }
@@ -69,6 +69,51 @@ public class Player {
                     carteMano.remove(nCarta);
                     Visualizza.statusPlayer(this);
                     break;
+                case TipoCarte.BIRRA:
+                    pf += 1;
+                    partita.addCartaScarto(carta);
+                    carteMano.remove(nCarta);
+                    break;
+                case TipoCarte.SALOON:
+                    for (Player tmp: partita.getListaPlayer()) {
+                        tmp.addPf(1);
+                    }
+                    partita.addCartaScarto(carta);
+                    carteMano.remove(nCarta);
+                    break;
+                case TipoCarte.DILIGENZA:
+                    partita.addCartaScarto(carta);
+                    carteMano.remove(nCarta);
+
+                    partita.pescaCarte(this, 2);
+                    break;
+                case TipoCarte.WELLS_FARGO:
+                    partita.addCartaScarto(carta);
+                    carteMano.remove(nCarta);
+
+                    partita.pescaCarte(this, 3);
+                    break;
+                case TipoCarte.PANICO:
+                    partita.addCartaScarto(carta);
+                    carteMano.remove(nCarta);
+
+                    FunzioniCarte.usaCarta(carta, this, partita);
+                    break;
+                case TipoCarte.CAT_BALOU:
+                    partita.addCartaScarto(carta);
+                    carteMano.remove(nCarta);
+
+                    FunzioniCarte.usaCarta(carta, this, partita);
+                    break;
+                case TipoCarte.GATLING:
+                    partita.addCartaScarto(carta);
+                    carteMano.remove(nCarta);
+
+                    FunzioniCarte.usaCarta(carta, this, partita);
+                    break;
+                case TipoCarte.MIRINO: case TipoCarte.MUSTANG:
+                    carta.updateEquipaggiato();
+                    break;
             }
         } while(nCarta >= 0);
     }
@@ -77,39 +122,80 @@ public class Player {
         return pf;
     }
 
+    public void addPf(int n) {
+        this.pf += n;
+    }
+
     public void setPf(int pf) {
         this.pf = pf;
     }
 
     public void riceviDanno(int danno, Partita partita) {
-        boolean carteMancato = false;
 
         Carte cartaMancato = null;
+        Carte cartaBirra = null;
+        Carte cartaBarile = null;
         for (Carte tmp: carteMano) {
             if (tmp.getTipo() == TipoCarte.MANCATO) {
-                carteMancato = true;
                 cartaMancato = tmp;
+                break;
+            }
+
+            if (tmp.getTipo() == TipoCarte.BIRRA) {
+                cartaBirra = tmp;
+                break;
+            }
+
+            if (tmp.getTipo() == TipoCarte.BARILE) {
+                cartaBarile = tmp;
                 break;
             }
         }
 
         int scelta = 0;
-        if (carteMancato) {
+        if (cartaMancato != null) {
             Visualizza.statusPlayer(this);
             Menu menu = new Menu (Costanti.TITOLO_USOMANCATO, Costanti.OPZIONI_USOMANCATO, false, true, true);
 
             scelta = menu.choose();
         }
 
-        if (scelta == 2) {
-            partita.addCartaScarto(cartaMancato);
-            carteMano.remove(cartaMancato);
-        } else {
-            pf -= danno;
+        if (cartaBarile != null) {
+            Visualizza.statusPlayer(this);
+            Menu menu = new Menu ("Vuoi usare carta Barile?", Costanti.OPZIONI_USOMANCATO, false, true, true);
 
-            if (pf < 0) {
-                partita.removePlayer(this);
+            scelta = menu.choose();
+
+            partita.pescaCarte(this, 1);
+            Carte cartaPescata = getCarteMano().getLast();
+
+            if (cartaPescata.getSeme().equals("CUORI")) {
+                removeCarta(cartaPescata);
+                partita.addCartaScarto(cartaPescata);
+            } else {
+                scelta = 0;
             }
+        }
+
+        if (scelta == 2) {
+            if (cartaMancato != null) {
+                partita.addCartaScarto(cartaMancato);
+                carteMano.remove(cartaMancato);
+            } else {
+                partita.addCartaScarto(cartaBarile);
+                carteMano.remove(cartaBarile);
+            }
+        } else {
+                pf -= danno;
+                if (pf <= 0) {
+                    if (cartaBirra == null) {
+                        partita.removePlayer(this);
+                    } else {
+                        pf = 1;
+                        partita.addCartaScarto(cartaBirra);
+                        carteMano.remove(cartaBirra);
+                    }
+                }
         }
     }
 
